@@ -29,8 +29,11 @@ def sentence_similarity(sent1, sent2):
 
 def _pagerank(A, eps=0.0001, d=0.5):
     """
-    1. eps: stop the algorithm when the difference between 2 consecutive iterations is smaller or equal to eps
-    2. d: damping factor: With a probability of 1-d the user will simply pick a web page at random as the next destination, ignoring the link structure completely.
+    1. eps: stop the algorithm when the difference between 2
+    consecutive iterations is smaller or equal to eps
+    2. d: damping factor: With a probability of 1-d the user will
+    simply pick a web page at random as the next destination,
+    ignoring the link structure completely.
     :param A:
     :param eps:
     :param d:
@@ -62,7 +65,8 @@ def textrank(sentences, top_n=5):
     S = build_similarity_matrix(sentences)
     sentence_rank = _pagerank(S)
     # Sorting sentence by rank
-    sorted_sentences = [item[0] for item in sorted(enumerate(sentence_rank), key=lambda item: -1*item[1])]
+    sorted_sentences = [item[0] for item in sorted(enumerate(sentence_rank),
+                                                   key=lambda item: -1*item[1])]
     selected_sentences = sorted_sentences[:top_n]
     # itemgetter('name')({'name': 'tu', 'age': 18})  Output : "tu"
     summary = itemgetter(*selected_sentences)(sentences)

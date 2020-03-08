@@ -17,7 +17,8 @@ def sentence_similarity_score():
     input_json = request.get_json()
     if input_json['sent1'] is None or input_json['sent1'] is None:
         return {'error': 'no text provided'}, 400
-    score = textrank.sentence_similarity(input_json['sent1'], input_json['sent2'])
+    score = textrank.sentence_similarity(input_json['sent1'],
+                                         input_json['sent2'])
     return str(score)
 
 
