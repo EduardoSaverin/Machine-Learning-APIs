@@ -23,11 +23,11 @@ def sentence_similarity_score():
 
 
 @app.route("/textrank", methods=['POST'])
-def textrank():
+def generate_summary():
     input_json = request.get_json()
-    if input_json['sentences'] is None:
+    if input_json['paragraph'] is None:
         return {'error': 'no text provided'}, 400
-    return textrank.textrank(input_json['sentences'])
+    return ''.join(textrank.textrank(input_json['paragraph']))
 
 
 if __name__ == '__main__':

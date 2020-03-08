@@ -1,13 +1,17 @@
 from nltk.corpus import stopwords
 from nltk.cluster.util import cosine_distance
-from gensim.utils import simple_preprocess
 import numpy as np
 from operator import itemgetter
+import nltk.data
+from nltk.tokenize import word_tokenize
+#nltk.download("punkt")
+#nltk.download("stopwords")
 
+stop_words = stopwords.words("english")
 
 def sentence_similarity(sent1, sent2):
-    sent1 = [w.lower() for w in simple_preprocess(sent1)]
-    sent2 = [w.lower() for w in simple_preprocess(sent2)]
+    sent1 = [w.lower() for w in word_tokenize(sent1)]
+    sent2 = [w.lower() for w in word_tokenize(sent2)]
 
     all_words = list(set(sent1 + sent2))
 
@@ -15,12 +19,12 @@ def sentence_similarity(sent1, sent2):
     vector2 = [0] * len(all_words)
 
     for w in sent1:
-        if w in stopwords:
+        if w in stop_words:
             continue
         vector1[all_words.index(w)] += 1
 
     for w in sent2:
-        if w in stopwords:
+        if w in stop_words:
             continue
         vector2[all_words.index(w)] += 1
 
@@ -47,11 +51,9 @@ def _pagerank(A, eps=0.0001, d=0.5):
 
 
 def build_similarity_matrix(sentences):
-    S = np.zeros(len(sentences), len(sentences))
+    S = np.zeros((len(sentences), len(sentences)))
     for id1 in range(len(sentences)):
         for id2 in range(len(sentences)):
-            if id1 == id2:
-                continue
             S[id1][id2] = sentence_similarity(sentences[id1], sentences[id2])
 
         for id in range(len(S)):
@@ -59,7 +61,9 @@ def build_similarity_matrix(sentences):
     return S
 
 
-def textrank(sentences, top_n=5):
+def textrank(paragraph, top_n=5):
+    tokenizer = nltk.data.load("tokenizers/punkt/english.pickle")
+    sentences = tokenizer.tokenize(paragraph)
     S = build_similarity_matrix(sentences)
     sentence_rank = _pagerank(S)
     # Sorting sentence by rank
