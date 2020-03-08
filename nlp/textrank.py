@@ -62,7 +62,7 @@ def textrank(sentences, top_n=5):
     S = build_similarity_matrix(sentences)
     sentence_rank = _pagerank(S)
     # Sorting sentence by rank
-    sorted_sentences = [item[0] for item in sorted(enumerate(sentence_rank), key = lambda item: -1*item[1])]
+    sorted_sentences = [item[0] for item in sorted(enumerate(sentence_rank), key=lambda item: -1*item[1])]
     selected_sentences = sorted_sentences[:top_n]
     # itemgetter('name')({'name': 'tu', 'age': 18})  Output : "tu"
     summary = itemgetter(*selected_sentences)(sentences)
