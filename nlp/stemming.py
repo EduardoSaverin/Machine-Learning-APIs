@@ -1,6 +1,7 @@
 from gensim.utils import simple_preprocess
 from gensim.parsing.preprocessing import STOPWORDS
 from nltk.stem import SnowballStemmer, WordNetLemmatizer
+import re
 
 
 # nltk.download('wordnet')
@@ -25,9 +26,17 @@ def lemmatize_stemming(words):
     return stemming(lemmatize(words))
 
 
-def preprocess(text):
+def cleanup_text(text):
+    text = re.sub('[^a-zA-Z]', ' ', text)
+    text = re.sub("&lt;/?.*?&gt;", " &lt;&gt; ", text)
+    return text
+
+
+def preprocess(text, extra_cleanup=False):
     processed_words = []
+    if extra_cleanup:
+        text = cleanup_text(text)
     for token in simple_preprocess(text, min_len=3):
         if token not in STOPWORDS:
-            processed_words.append(lemmatize_stemming([token]))
+            processed_words.extend(lemmatize_stemming([token]))
     return processed_words

@@ -4,14 +4,16 @@ import numpy as np
 from operator import itemgetter
 import nltk.data
 from nltk.tokenize import word_tokenize
-#nltk.download("punkt")
-#nltk.download("stopwords")
 
-stop_words = stopwords.words("english")
+# nltk.download("punkt")
+# nltk.download("stopwords")
+
+stop_words = set(stopwords.words("english"))
+
 
 def sentence_similarity(sent1, sent2):
-    sent1 = [w.lower() for w in word_tokenize(sent1)]
-    sent2 = [w.lower() for w in word_tokenize(sent2)]
+    sent1 = [w.lower() for w in nltk.word_tokenize(sent1)]
+    sent2 = [w.lower() for w in nltk.word_tokenize(sent2)]
 
     all_words = list(set(sent1 + sent2))
 
@@ -62,12 +64,13 @@ def build_similarity_matrix(sentences):
 
 
 def textrank(paragraph, top_n=5):
-    tokenizer = nltk.data.load("tokenizers/punkt/english.pickle")
-    sentences = tokenizer.tokenize(paragraph)
+    #tokenizer = nltk.data.load("tokenizers/punkt/english.pickle")
+    #sentences = tokenizer.tokenize(paragraph)
+    sentences = nltk.sent_tokenize(paragraph)
     S = build_similarity_matrix(sentences)
     sentence_rank = _pagerank(S)
     # Sorting sentence by rank
-    sorted_sentences = [item[0] for item in sorted(enumerate(sentence_rank), key=lambda item: -1*item[1])]
+    sorted_sentences = [item[0] for item in sorted(enumerate(sentence_rank), key=lambda item: -1 * item[1])]
     selected_sentences = sorted_sentences[:top_n]
     # itemgetter('name')({'name': 'tu', 'age': 18})  Output : "tu"
     summary = itemgetter(*selected_sentences)(sentences)
